@@ -1,16 +1,13 @@
-import java.awt.*;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.awt.Image;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
+import javax.swing.JPanel;
 
 public class main extends JPanel {
 
@@ -18,127 +15,136 @@ public class main extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	static int x1 = 10, y1, y2 = 34 ,x2 = 750;
+	// TODO move constants to other class
+	final int RIGHT_GAMER_BAR_X = 750;
+	final int GAMER_BAR_WIDTH = 28;
+	final int GAMER_BAR_HEIGHT = 204;
+
+	static int LEFT_GAMER_LOCATION_X = 10; //
+	static int y1;
+	static int y2 = 34;
+	static int x2 = 750;
 
 	int width;
 	int height;
 
-	float radius = 10;
-	float diameter = radius * 2;
+	float radiusOfBall = 10;
+	float diameter = radiusOfBall * 2;
 
-	float X = radius + 20;
-	float Y = radius + 20;
+	float currentXOfBall = radiusOfBall + 20;
+	float currentYOfBall = radiusOfBall + 20;
 
 	float dx = 30;
 	float dy = 10;
-	
+
 	public main() {
-	
+
 		setFocusable(true);
 		requestFocusInWindow();
 		setBackground(Color.BLACK);
 		setLayout(null);
 
-		Image imgr = new ImageIcon(this.getClass().getResource("/rechts.PNG")).getImage();
+		final Image rightBarImage = new ImageIcon(this.getClass().getResource("/rechts.PNG")).getImage();
 
-		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setIcon(new ImageIcon(imgr));
-		lblNewLabel.setBounds(750, y1, 28, 204);
-		add(lblNewLabel);
+		JLabel rightGamer = new JLabel("New label");
+		rightGamer.setIcon(new ImageIcon(rightBarImage));
 
-		Image imgl = new ImageIcon(this.getClass().getResource("/links.PNG")).getImage();
-		JLabel lblNewLabel_1 = new JLabel("");
-		lblNewLabel_1.setIcon(new ImageIcon(imgl));
-		lblNewLabel_1.setBounds(10, y2, 28, 204);
-		add(lblNewLabel_1);
-		
-		
-                	addKeyListener(new KeyAdapter() {
-					@Override
-					public void keyPressed(KeyEvent e) {
-						Thread t = new Thread() {
-							public void run() {
-								if (e.getKeyCode() == KeyEvent.VK_W) {
+		rightGamer.setBounds(RIGHT_GAMER_BAR_X, y1, GAMER_BAR_WIDTH, GAMER_BAR_HEIGHT);
+		add(rightGamer);
 
-									y1 = (int) lblNewLabel_1.getBounds().getY();
-									if (y1 > 0)
-										y1 -= 10;
-									lblNewLabel_1.setBounds(x1, y1, 28, 204);
-								}
-								if (e.getKeyCode() == KeyEvent.VK_S) {
+		final Image leftBarImage = new ImageIcon(this.getClass().getResource("/links.PNG")).getImage();
+		JLabel leftGamer = new JLabel("");
+		leftGamer.setIcon(new ImageIcon(leftBarImage));
+		leftGamer.setBounds(10, y2, GAMER_BAR_WIDTH, GAMER_BAR_HEIGHT);
+		add(leftGamer);
 
-									y1 = (int) lblNewLabel_1.getBounds().getY();
-									if (y1 < 360)
-										y1 += 10;		
-									lblNewLabel_1.setBounds(x1, y1, 28, 204);
-								}
-								if (e.getKeyCode() == KeyEvent.VK_UP) {
+		addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				Thread t = new Thread() {
+					public void run() {
+						if (e.getKeyCode() == KeyEvent.VK_W) {
 
-									y2 = (int) lblNewLabel.getBounds().getY();
-									if (y2 > 10)
-										y2 -= 10;
-									lblNewLabel.setBounds(x2, y2, 28, 204);
-								}
-								if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+							y1 = (int) leftGamer.getBounds().getY();
+							if (y1 > 0)
+								y1 -= 10;
+							leftGamer.setBounds(LEFT_GAMER_LOCATION_X, y1, GAMER_BAR_WIDTH, GAMER_BAR_HEIGHT);
+						}
+						if (e.getKeyCode() == KeyEvent.VK_S) {
 
-									y2 = (int) lblNewLabel.getBounds().getY();
-									if (y2 < 360)
-										y2 += 10;
-									lblNewLabel.setBounds(x2, y2, 28, 204);
-								}
-							}
-						};
-						
+							y1 = (int) leftGamer.getBounds().getY();
+							if (y1 < 360)
+								y1 += 10;
+							leftGamer.setBounds(LEFT_GAMER_LOCATION_X, y1, GAMER_BAR_WIDTH, GAMER_BAR_HEIGHT);
+						}
+						if (e.getKeyCode() == KeyEvent.VK_UP) {
+
+							y2 = (int) rightGamer.getBounds().getY();
+							if (y2 > 10)
+								y2 -= 10;
+							rightGamer.setBounds(x2, y2, GAMER_BAR_WIDTH, GAMER_BAR_HEIGHT);
+						}
+						if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+
+							y2 = (int) rightGamer.getBounds().getY();
+							if (y2 < 360)
+								y2 += 10;
+							rightGamer.setBounds(x2, y2, GAMER_BAR_WIDTH, GAMER_BAR_HEIGHT);
+						}
+					}
+				};
+
 				t.start();
-					}
-
-				});
-
-			}					
-		
-		Thread thread = new Thread() {
-			public void run() {
-				while (true) {
-
-					width = getWidth();
-					height = getHeight();
-
-					X = X + dx;
-					Y = Y + dy;
-
-					if (X - radius<0  ) {
-						dx = -dx;
-						X = radius;
-					} else if (X + radius > width) {
-						dx = -dx;
-						X = width - radius;
-					}
-
-					if (Y - radius < 0) {
-						dy = -dy;
-						Y = radius;
-					} else if (Y + radius > height ) {
-						dy = -dy;
-						Y = height - radius;
-					}
-					repaint();
-
-					try {
-						Thread.sleep(50);
-					} catch (InterruptedException ex) {
-					}
-
-				}
 			}
-		};
-		{
+
+		});
+
+	}
+
+	Thread thread = new Thread() {
+		public void run() {
+			while (true) {
+
+				width = getWidth();
+				height = getHeight();
+
+				currentXOfBall = currentXOfBall + dx;
+				currentYOfBall = currentYOfBall + dy;
+
+				if ((currentXOfBall - radiusOfBall < 0) || (currentXOfBall - radiusOfBall == LEFT_GAMER_LOCATION_X)) {
+					dx = -dx;
+					currentXOfBall = radiusOfBall;
+				} else if (currentXOfBall + radiusOfBall > width) {
+					dx = -dx;
+					currentXOfBall = width - radiusOfBall;
+				}
+
+				if (currentYOfBall - radiusOfBall < 0) {
+					dy = -dy;
+					currentYOfBall = radiusOfBall;
+				} else if (currentYOfBall + radiusOfBall > height) {
+					dy = -dy;
+					currentYOfBall = height - radiusOfBall;
+				}
+				repaint();
+
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException ex) {
+				}
+
+			}
+		}
+	};
+	{
 		thread.start();
 	}
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.setColor(Color.white);
-		g.fillOval((int) (X - radius), (int) (Y - radius), (int) diameter, (int) diameter);
+		g.fillOval((int) (currentXOfBall - radiusOfBall), (int) (currentYOfBall - radiusOfBall), (int) diameter,
+				(int) diameter);
 	}
 
 	public static void main(String[] args) {
