@@ -12,22 +12,33 @@ public class KeyHandler implements KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
+			Var.moveupgegner = true;
 
-		if (e.getKeyCode() == KeyEvent.VK_W) {
-			Properties.move_up = true;
-		} else if (e.getKeyCode() == KeyEvent.VK_S) {
-			Properties.move_down = true;
+		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			Var.movedowngegner = true;
 		}
 
+		if (e.getKeyCode() == KeyEvent.VK_W) {
+			Var.moveup = true;
+
+		} else if (e.getKeyCode() == KeyEvent.VK_S) {
+			Var.movedown = true;
+		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 
 		if (e.getKeyCode() == KeyEvent.VK_W) {
-			Properties.move_up = false;
+			Var.moveup = false;
 		} else if (e.getKeyCode() == KeyEvent.VK_S) {
-			Properties.move_down = false;
+			Var.movedown = false;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
+			Var.moveupgegner = false;
+		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			Var.movedowngegner = false;
 		}
 
 	}
